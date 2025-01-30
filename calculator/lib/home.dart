@@ -139,7 +139,7 @@ class _HomeState extends State<Home> {
                       ),
                       CalculatorButton(
                         label: "=",
-                        onClick: onButtonClicked,
+                        onClick: onEqualClicked,
                       ),
                       CalculatorButton(
                         label: "-",
@@ -157,7 +157,12 @@ class _HomeState extends State<Home> {
   }
 
   onButtonClicked(label) {
-    resultScreen += label;
+    if (op == "=") {
+      resultScreen = '';
+      // LHS = "";
+      op = "";
+    } else
+      resultScreen += label;
     setState(() {});
   }
 
@@ -165,20 +170,20 @@ class _HomeState extends State<Home> {
   String LHS = "";
 
   String calculate(String lhs, String op, String rhs) {
-    double LHS = double.parse(lhs);
-    double RHS = double.parse(rhs);
+    int LHS = int.parse(lhs);
+    int RHS = int.parse(rhs);
 
     if (op == "+") {
-      double res = LHS + RHS;
+      int res = LHS + RHS;
       return res.toString();
     } else if (op == "-") {
-      double res = LHS - RHS;
+      int res = LHS - RHS;
       return res.toString();
     } else if (op == "*") {
-      double res = LHS * RHS;
+      int res = LHS * RHS;
       return res.toString();
     } else if (op == "/") {
-      double res = LHS / RHS;
+      int res = LHS ~/ RHS;
       return res.toString();
     } else {
       return "";
@@ -190,6 +195,8 @@ class _HomeState extends State<Home> {
       LHS = resultScreen;
       // op = label;
       // resultScreen = '';
+    } else if (op == "=") {
+      op = label;
     } else {
       resultScreen = calculate(LHS, op, resultScreen);
       LHS = resultScreen;
@@ -200,5 +207,13 @@ class _HomeState extends State<Home> {
     resultScreen = '';
     setState(() {});
     print(LHS);
+  }
+
+  onEqualClicked(label) {
+    resultScreen = calculate(LHS, op, resultScreen);
+    LHS = resultScreen;
+    op = label;
+    // resultScreen = '';
+    setState(() {});
   }
 }
